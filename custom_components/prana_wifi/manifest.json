@@ -1,0 +1,11 @@
+{
+  "codeowners": ["@boot-nyxpoint"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/boot-nyxpoint/prana-wifi",
+  "domain": "prana_wifi",
+  "iot_class": "cloud_polling",
+  "name": "Prana Wifi",
+  "requirements": [],
+  "version": "1.0.0"
+}

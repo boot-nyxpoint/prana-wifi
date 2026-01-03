@@ -1,0 +1,92 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Account is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Password",
+                    "username": "Username"
+                }
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "brightness": {
+                "name": "Display brightness"
+            },
+            "fan_output_speed": {
+                "name": "Output speed"
+            },
+            "fan_input_speed": {
+                "name": "Input speed"
+            }
+        },
+        "climate": {
+            "prana_climate": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "night": "Night",
+                            "boost": "Boost",
+                            "heating": "Heating",
+                            "winter": "Winter",
+                            "auto": "Auto",
+                            "auto+": "Auto+"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "tvoc": {
+                "name": "TVOC"
+            },
+            "co2eq": {
+                "name": "CO2 equivalent"
+            },
+            "humidity": {
+                "name": "Humidity"
+            },
+            "atm": {
+                "name": "Atmospheric pressure"
+            },
+            "temp_in": {
+                "name": "Temperature in"
+            },
+            "temp_out": {
+                "name": "Temperature out"
+            }
+        },
+        "switch": {
+            "power_on":{
+                "name": "Power"
+            },
+            "heating_on": {
+                "name": "Heating mode"
+            },
+            "winter_on": {
+                "name": "Winter mode"
+            },
+            "night_on": {
+                "name": "Night mode"
+            },
+            "boost_on": {
+                "name": "Boost mode"
+            },
+            "auto_on": {
+                "name": "Auto mode"
+            },
+            "auto_plus_on": {
+                "name": "Auto+ mode"
+            }
+        }
+    }
+}
