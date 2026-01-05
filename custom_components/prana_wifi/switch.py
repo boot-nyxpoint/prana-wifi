@@ -309,7 +309,7 @@ class PranaAutoPlusSwitch(CoordinatorEntity[PranaCoordinator], SwitchEntity):
         """Return the sensor value."""
         if self.coordinator.data is None or self.coordinator.data.get("presets") is None:
             return None
-        return bool(self.coordinator.data.get("presets").get("auto+"))
+        return bool(self.coordinator.data.get("presets").get("auto_plus"))
 
     async def async_toggle(self, **kwargs):
         """Toggle the entity."""

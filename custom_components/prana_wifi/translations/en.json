@@ -39,7 +39,7 @@
                             "heating": "Heating",
                             "winter": "Winter",
                             "auto": "Auto",
-                            "auto+": "Auto+"
+                            "auto_plus": "Auto+"
                         }
                     }
                 }
