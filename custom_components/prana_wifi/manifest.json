@@ -5,6 +5,7 @@
   "documentation": "https://github.com/boot-nyxpoint/prana-wifi",
   "domain": "prana_wifi",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/boot-nyxpoint/prana-wifi/issues",
   "name": "Prana Wifi",
   "requirements": [],
   "version": "1.0.0"
