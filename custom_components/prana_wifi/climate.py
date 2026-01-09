@@ -8,6 +8,7 @@ from homeassistant.components.climate import (
     ClimateEntity,
     ClimateEntityFeature,
     HVACMode,
+    HVACAction,
 )
 from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
@@ -109,9 +110,35 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
         return self.coordinator.data.get('sensors').get("temp_out")
 
     @property
+    def current_humidity(self) -> float | None:
+        """Return the current temperature from temp_in sensor."""
+        if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
+            return None
+        return self.coordinator.data.get('sensors').get("humidity")
+
+    @property
     def hvac_mode(self) -> HVACMode:
         """Return the current HVAC mode."""
         return HVACMode.FAN_ONLY if self._is_on else HVACMode.OFF
+
+    @property
+    def hvac_action(self) -> HVACAction:
+        """Return the current HVAC action."""
+        if self._is_on:
+            defrosting = False
+            heating = False
+            for key, value in self.coordinator.data.get("presets").items():
+                if value and key == PRESET_HEATING:
+                    heating = True
+                if value and key == PRESET_WINTER:
+                    defrosting = True
+
+            if defrosting:
+                return HVACAction.DEFROSTING
+            if heating:
+                return HVACAction.HEATING
+            return HVACAction.FAN
+        return HVACAction.OFF
 
     @property
     def fan_mode(self) -> str | None:
