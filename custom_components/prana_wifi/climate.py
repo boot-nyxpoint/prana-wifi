@@ -8,6 +8,7 @@ from homeassistant.components.climate import (
     ClimateEntity,
     ClimateEntityFeature,
     HVACMode,
+    HVACAction,
 )
 from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
@@ -46,6 +47,7 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
 
     _attr_has_entity_name = True
     _attr_name = None
+    _attr_translation_key = "prana_climate"
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.FAN_ONLY]
     _attr_preset_modes = PRESET_MODES
@@ -95,22 +97,48 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
             return None
 
         for key, value in self.coordinator.data.get("presets").items():
-            if value:
+            if value and key in PRESET_MODES:
                 return key
 
         return None
 
     @property
     def current_temperature(self) -> float | None:
-        """Return the current temperature from temp_in sensor."""
+        """Return the current temperature from inside_t_in sensor."""
         if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
             return None
-        return self.coordinator.data.get('sensors').get("temp_out")
+        return self.coordinator.data.get('sensors').get("inside_t_in")
+
+    @property
+    def current_humidity(self) -> float | None:
+        """Return the current temperature from humidity sensor."""
+        if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
+            return None
+        return self.coordinator.data.get('sensors').get("humidity")
 
     @property
     def hvac_mode(self) -> HVACMode:
         """Return the current HVAC mode."""
         return HVACMode.FAN_ONLY if self._is_on else HVACMode.OFF
+
+    @property
+    def hvac_action(self) -> HVACAction:
+        """Return the current HVAC action."""
+        if self._is_on:
+            defrosting = False
+            heating = False
+            for key, value in self.coordinator.data.get("presets").items():
+                if value and key == PRESET_HEATING:
+                    heating = True
+                if value and key == PRESET_WINTER:
+                    defrosting = True
+
+            if defrosting:
+                return HVACAction.DEFROSTING
+            if heating:
+                return HVACAction.PREHEATING
+            return HVACAction.FAN
+        return HVACAction.OFF
 
     @property
     def fan_mode(self) -> str | None:

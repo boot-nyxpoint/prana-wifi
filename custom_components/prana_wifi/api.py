@@ -324,18 +324,32 @@ class PranaWifiClient:
         """Lock in/out speeds for a device."""
         return await self.button_clicked(device_id, 9)
 
+    async def get_raw_state(self, device_id: str, keys: list[str]) -> dict[str, Any] | None:
+        """Get the current raw state of a device."""
+        params = {
+            "keys": ",".join(keys),
+        }
+        data = await self._api_get(f"plugins/telemetry/DEVICE/{device_id}/values/attributes", params)
+
+        if data:
+            ret = {}
+            for item in data:
+                ret[item["key"]] = {
+                    "value": item["value"],
+                    "last_updated": item["lastUpdateTs"],
+                }
+            return ret
+        return None
+
     async def get_state(self, device_id: str) -> dict[str, Any]:
         """Get the current state of a device."""
-        params = {
-            "keys": "state",
-        }
-        return self._parse_state(await self._api_get(f"plugins/telemetry/DEVICE/{device_id}/values/attributes", params))
+        return self._parse_state(await self.get_raw_state(device_id, ["state"]))
 
-    def _parse_state(self, data: list[Any]) -> dict[str, Any]:
+    def _parse_state(self, data: dict[str, Any] | None) -> dict[str, Any]:
         """Parse the state into a dict."""
         if data:
-            raw_state = data[0].get("value")
-            last_updated = data[0].get("lastUpdateTs")
+            raw_state = data['state']['value']
+            last_updated = data['state']['last_updated']
             state = bytes.fromhex(raw_state)
             return {
                 "presets": self._parse_state_presets(state),
@@ -364,18 +378,21 @@ class PranaWifiClient:
         if humidity > 0:
             co2eq = int(struct.unpack_from(">h", state, 52)[0] & 0b0011111111111111)
             if 0 < co2eq < 10000:
-                temp_in = float(struct.unpack_from(">h", state, 42)[0] & 0b0011111111111111) / 10.0
-                temp_out = float(struct.unpack_from(">h", state, 45)[0] & 0b0011111111111111) / 10.0
+                inside_t_in = float(struct.unpack_from(">h", state, 45)[0] & 0b0011111111111111) / 10.0
+                inside_t_out = float(struct.unpack_from(">h", state, 39)[0] & 0b0011111111111111) / 10.0
+                outside_t = float(struct.unpack_from(">h", state, 42)[0] & 0b0011111111111111) / 10.0
             else:
-                temp_in = float(state[40]) / 10
-                temp_out = float(state[46]) / 10
+                inside_t_in = float(state[46]) / 10
+                inside_t_out = float(state[40]) / 10
+                outside_t = None
             return {
                 "tvoc": int(struct.unpack_from(">h", state, 54)[0] & 0b0011111111111111),
                 "co2eq": co2eq,
                 "humidity": humidity,
                 "atm": 512 + int(state[69]),
-                "temp_in": temp_in,
-                "temp_out": temp_out,
+                "inside_t_in": inside_t_in,
+                "inside_t_out": inside_t_out,
+                "outside_t": outside_t,
             }
         return None
 

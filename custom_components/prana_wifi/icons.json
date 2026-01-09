@@ -1,0 +1,35 @@
+{
+  "entity": {
+    "climate": {
+      "prana_climate": {
+        "state_attributes": {
+          "preset_mode": {
+            "default": "mdi:robot-confused",
+            "state": {
+              "night": "mdi:moon-waning-crescent",
+              "boost": "mdi:rocket-launch",
+              "heating": "mdi:heat-wave",
+              "winter": "mdi:snowflake",
+              "auto": "mdi:fan-auto",
+              "auto_plus": "mdi:fan-plus"
+            }
+          },
+          "fan_mode": {
+            "default": "mdi:fan"
+          }
+        }
+      }
+    },
+    "sensor": {
+      "inside_t_in": {
+        "default": "mdi:arrow-collapse-right"
+      },
+      "inside_t_out": {
+        "default": "mdi:arrow-expand-left"
+      },
+      "outside_t": {
+        "default": "mdi:arrow-collapse-left"
+      }
+    }
+  }
+}
