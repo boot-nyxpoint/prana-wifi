@@ -19,6 +19,17 @@
           }
         }
       }
+    },
+    "sensor": {
+      "inside_t_in": {
+        "default": "mdi:arrow-collapse-right"
+      },
+      "inside_t_out": {
+        "default": "mdi:arrow-expand-left"
+      },
+      "outside_t": {
+        "default": "mdi:arrow-collapse-left"
+      }
     }
   }
 }

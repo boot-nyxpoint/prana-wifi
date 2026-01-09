@@ -52,11 +52,14 @@
       "atm": {
         "name": "Atmospheric pressure"
       },
-      "temp_in": {
-        "name": "Temperature in"
+      "inside_t_in": {
+        "name": "Inside temperature in"
       },
-      "temp_out": {
-        "name": "Temperature out"
+      "inside_t_out": {
+        "name": "Inside temperature out"
+      },
+      "outside_t": {
+        "name": "Outside temperature"
       }
     }
   }

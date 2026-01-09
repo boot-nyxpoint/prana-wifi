@@ -104,14 +104,14 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
 
     @property
     def current_temperature(self) -> float | None:
-        """Return the current temperature from temp_in sensor."""
+        """Return the current temperature from inside_t_in sensor."""
         if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
             return None
-        return self.coordinator.data.get('sensors').get("temp_out")
+        return self.coordinator.data.get('sensors').get("inside_t_in")
 
     @property
     def current_humidity(self) -> float | None:
-        """Return the current temperature from temp_in sensor."""
+        """Return the current temperature from humidity sensor."""
         if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
             return None
         return self.coordinator.data.get('sensors').get("humidity")
