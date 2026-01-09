@@ -95,7 +95,7 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
             return None
 
         for key, value in self.coordinator.data.get("presets").items():
-            if value:
+            if value and key in PRESET_MODES:
                 return key
 
         return None
