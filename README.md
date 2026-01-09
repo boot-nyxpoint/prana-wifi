@@ -21,15 +21,9 @@ Nearly all controls from the mobile app. Only the scheduler is missing, but it d
 
 1. Ensure [HACS](https://hacs.xyz/) is installed in your Home Assistant instance
 2. Open HACS in the Home Assistant sidebar
-3. Click on **Integrations**
-4. Click the **three dots** menu in the top right corner
-5. Select **Custom repositories**
-6. Add the repository URL: `https://github.com/boot-nyxpoint/prana-wifi`
-7. Select **Integration** as the category
-8. Click **Add**
-9. Search for "Prana WiFi" in HACS
-10. Click **Download**
-11. Restart Home Assistant
+3. Search for "Prana WiFi" in HACS
+4. Click **Download**
+5. Restart Home Assistant
 
 ### Manual Installation
 
