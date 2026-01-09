@@ -136,7 +136,7 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
             if defrosting:
                 return HVACAction.DEFROSTING
             if heating:
-                return HVACAction.HEATING
+                return HVACAction.PREHEATING
             return HVACAction.FAN
         return HVACAction.OFF
 
