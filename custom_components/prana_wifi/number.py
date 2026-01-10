@@ -74,7 +74,7 @@ class PranaBrightness(CoordinatorEntity[PranaCoordinator], NumberEntity):
         )
 
 class PranaFanInputSpeed(CoordinatorEntity[PranaCoordinator], NumberEntity):
-    """Representation of a Prana WiFi display brightness control."""
+    """Representation of a Prana WiFi input speed control."""
 
     _attr_has_entity_name = True
     _attr_translation_key = "fan_input_speed"
@@ -103,7 +103,7 @@ class PranaFanInputSpeed(CoordinatorEntity[PranaCoordinator], NumberEntity):
         return self.coordinator.data.get("fan").get('input_speed')
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set the display brightness level."""
+        """Set the input speed."""
         speed = int(value)
         self.coordinator.set_in_speed(speed)
         self.schedule_update_ha_state(force_refresh=False)
@@ -112,7 +112,7 @@ class PranaFanInputSpeed(CoordinatorEntity[PranaCoordinator], NumberEntity):
         )
 
 class PranaFanOutputSpeed(CoordinatorEntity[PranaCoordinator], NumberEntity):
-    """Representation of a Prana WiFi display brightness control."""
+    """Representation of a Prana WiFi output speed control."""
 
     _attr_has_entity_name = True
     _attr_translation_key = "fan_output_speed"
@@ -141,7 +141,7 @@ class PranaFanOutputSpeed(CoordinatorEntity[PranaCoordinator], NumberEntity):
         return self.coordinator.data.get("fan").get('output_speed')
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set the display brightness level."""
+        """Set the output speed."""
         speed = int(value)
         self.coordinator.set_out_speed(speed)
         self.schedule_update_ha_state(force_refresh=False)
