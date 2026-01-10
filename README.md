@@ -94,8 +94,9 @@ For each Prana device, the following entities are created:
 | `sensor.{device_name}_co2_equivalent` | CO2 equivalent | ppm |
 | `sensor.{device_name}_humidity` | Humidity | % |
 | `sensor.{device_name}_atmospheric_pressure` | Atmospheric pressure | hPa |
-| `sensor.{device_name}_temperature_in` | Incoming air temperature | °C |
-| `sensor.{device_name}_temperature_out` | Outgoing air temperature | °C |
+| `sensor.{device_name}_inside_t_in` | Inside temperature in | °C |
+| `sensor.{device_name}_inside_t_out` | Inside temperature out | °C |
+| `sensor.{device_name}_outside_t` | Outside temperature | °C |
 
 ### Number Controls
 
@@ -209,6 +210,9 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 This integration is not officially affiliated with or endorsed by Prana. Use at your own risk. The integration relies on the Prana cloud API, which may change without notice.
 
+This module is licensed under GPL v3. This means you are free to use in non-commercial projects. The GPL license clearly explains that there is no warranty for this free software. Please see the included [LICENSE](LICENSE) file for details.
+
 ## Credits
 
+- **Device state parsing**: [prana_rc](https://github.com/corvis/prana_rc) project with its authors and contributors
 - **Code Owner**: [@boot-nyxpoint](https://github.com/boot-nyxpoint)
