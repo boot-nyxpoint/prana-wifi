@@ -84,15 +84,15 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
         return self.coordinator.data.get("on")
 
     @property
-    def _fan_mode(self) -> str | None:
-        """Determine if the climate is on."""
+    def fan_mode(self) -> str | None:
+        """Get the fan mode (current speed) of the climate device."""
         if self.coordinator.data is None or self.coordinator.data.get("fan") is None:
             return None
         return str(self.coordinator.data.get("fan").get("input_speed"))
 
     @property
     def preset_mode(self) -> str | None:
-        """Determine if the climate is on."""
+        """Get the preset mode of the climate device."""
         if self.coordinator.data is None or self.coordinator.data.get("presets") is None:
             return None
 
@@ -111,7 +111,7 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
 
     @property
     def current_humidity(self) -> float | None:
-        """Return the current temperature from humidity sensor."""
+        """Return the current humidity level."""
         if self.coordinator.data is None or self.coordinator.data.get('sensors') is None:
             return None
         return self.coordinator.data.get('sensors').get("humidity")
@@ -139,11 +139,6 @@ class PranaClimate(CoordinatorEntity[PranaCoordinator], ClimateEntity):
                 return HVACAction.PREHEATING
             return HVACAction.FAN
         return HVACAction.OFF
-
-    @property
-    def fan_mode(self) -> str | None:
-        """Return the current fan mode."""
-        return self._fan_mode
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
