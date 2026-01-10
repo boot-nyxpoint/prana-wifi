@@ -6,10 +6,13 @@ from dataclasses import dataclass
 from typing import Any
 from math import log2
 import struct
+import logging
 
 from aiohttp import ClientError, ClientResponseError, ClientSession, ContentTypeError
 
 from .const import API_BASE_URL, PRESET_NIGHT, PRESET_BOOST, PRESET_HEATING, PRESET_WINTER, PRESET_AUTO, PRESET_AUTO_PLUS
+
+_LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -214,7 +217,16 @@ class PranaWifiClient:
             "page": "10",
             "type": "",
         }
-        return self._parse_devices(await self._api_get('user/devices', params))
+        data = await self._api_get('user/devices', params)
+        devices = self._parse_devices(data)
+        _LOGGER.debug({
+            "action": "get_devices",
+            "data": {
+                "data": data,
+                "devices": devices,
+            }
+        })
+        return devices
 
     def _parse_devices(self, data: dict[str, Any]) -> list[PranaDevice]:
         """Parse device data from API response."""
@@ -254,6 +266,11 @@ class PranaWifiClient:
             "buttonNumber": button_number,
             **(args or {}),
         }
+        _LOGGER.debug({
+            "device_id": device_id,
+            "params": params,
+            "action": "button_clicked",
+        })
         return await self._api_post(url, {
             "method": "buttonClicked",
             "params": params
@@ -261,18 +278,36 @@ class PranaWifiClient:
 
     async def toggle_on_off(self, device_id: str) -> None:
         """Turn on a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "action": "toggle_on_off",
+        })
         return await self.button_clicked(device_id, 1)
 
     async def turn_on(self, device_id: str, speed: int = 1) -> None:
         """Turn on a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "speed": speed,
+            "action": "turn_on",
+        })
         return await self.set_speed(device_id, speed)
 
     async def turn_off(self, device_id: str) -> None:
         """Turn off a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "action": "turn_off",
+        })
         return await self.set_speed(device_id, 0)
 
     async def set_out_speed(self, device_id: str, speed: int) -> None:
         """Set out speed for a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "speed": speed,
+            "action": "set_out_speed",
+        })
         if speed == 0:
             return await self.button_clicked(device_id, 16)
         if 1 <= speed <= 5:
@@ -281,6 +316,11 @@ class PranaWifiClient:
 
     async def set_in_speed(self, device_id: str, speed: int) -> None:
         """Set in speed for a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "speed": speed,
+            "action": "set_in_speed",
+        })
         if speed == 0:
             return await self.button_clicked(device_id, 13)
         if 1 <= speed <= 5:
@@ -289,6 +329,11 @@ class PranaWifiClient:
 
     async def set_speed(self, device_id: str, speed: int) -> None:
         """Set the in and out speed of a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "speed": speed,
+            "action": "set_speed",
+        })
         if speed == 0:
             return await self.button_clicked(device_id, 10)
         if 1 <= speed <= 5:
@@ -297,6 +342,11 @@ class PranaWifiClient:
 
     async def set_preset(self, device_id: str, preset: str) -> None:
         """Set a preset mode on/off for a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "preset": preset,
+            "action": "set_preset",
+        })
         if preset == PRESET_NIGHT:
             return await self.button_clicked(device_id, 6)
         if preset == PRESET_BOOST:
@@ -316,12 +366,21 @@ class PranaWifiClient:
 
     async def set_brightness(self, device_id: str, brightness: int) -> dict[str, Any] | None:
         """Set the display brightness level for a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "brightness": brightness,
+            "action": "set_brightness",
+        })
         if 1 <= brightness <= 6:
             return await self.button_clicked(device_id, 110 + brightness)
         raise PranaWifiUnsupportedBrightnessError("brightness must be between 1 and 6")
 
     async def toggle_lock_in_out_speeds(self, device_id: str) -> dict[str, Any] | None:
         """Lock in/out speeds for a device."""
+        _LOGGER.debug({
+            "device_id": device_id,
+            "action": "toggle_lock_in_out_speeds",
+        })
         return await self.button_clicked(device_id, 9)
 
     async def get_raw_state(self, device_id: str, keys: list[str]) -> dict[str, Any] | None:
@@ -330,6 +389,11 @@ class PranaWifiClient:
             "keys": ",".join(keys),
         }
         data = await self._api_get(f"plugins/telemetry/DEVICE/{device_id}/values/attributes", params)
+        _LOGGER.debug({
+            "device_id": device_id,
+            "action": "get_raw_state",
+            "data": data
+        })
 
         if data:
             ret = {}
@@ -343,7 +407,13 @@ class PranaWifiClient:
 
     async def get_state(self, device_id: str) -> dict[str, Any]:
         """Get the current state of a device."""
-        return self._parse_state(await self.get_raw_state(device_id, ["state"]))
+        state = self._parse_state(await self.get_raw_state(device_id, ["state"]))
+        _LOGGER.debug({
+            "device_id": device_id,
+            "action": "get_state",
+            "data": state
+        })
+        return state
 
     def _parse_state(self, data: dict[str, Any] | None) -> dict[str, Any]:
         """Parse the state into a dict."""
