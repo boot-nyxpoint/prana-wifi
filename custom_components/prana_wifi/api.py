@@ -425,7 +425,7 @@ class PranaWifiClient:
                 "presets": self._parse_state_presets(state),
                 "sensors": self._parse_state_sensors(state),
                 "fan": self._parse_state_fan(state),
-                "brightness": int(log2(state[3]) + 1),
+                "brightness": int(log2(state[3]) + 1) if state[3] else 1,
                 "on": int(state[1]),
                 "last_updated": last_updated,
             }
