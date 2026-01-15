@@ -448,9 +448,9 @@ class PranaWifiClient:
         if humidity > 0:
             co2eq = int(struct.unpack_from(">h", state, 52)[0] & 0b0011111111111111)
             if 0 < co2eq < 10000:
-                inside_t_in = float(struct.unpack_from(">h", state, 45)[0] & 0b0011111111111111) / 10.0
-                inside_t_out = float(struct.unpack_from(">h", state, 39)[0] & 0b0011111111111111) / 10.0
-                outside_t = float(struct.unpack_from(">h", state, 42)[0] & 0b0011111111111111) / 10.0
+                inside_t_in = self._parse_state_temperature(state, 45)
+                inside_t_out = self._parse_state_temperature(state, 39)
+                outside_t = self._parse_state_temperature(state, 42)
             else:
                 inside_t_in = float(state[46]) / 10
                 inside_t_out = float(state[40]) / 10
@@ -465,6 +465,10 @@ class PranaWifiClient:
                 "outside_t": outside_t,
             }
         return None
+
+    def _parse_state_temperature(self, state: bytes, offset: int) -> float:
+        """Just why?"""
+        return (-1 if state[offset] & 0b01000000 else 1) * float(struct.unpack_from(">h", state, offset)[0] & 0b0011111111111111) / 10.0
 
     def _parse_state_fan(self, state: bytes) -> dict[str, Any]:
         """Parse the state of the fan into a dict."""
