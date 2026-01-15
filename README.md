@@ -94,9 +94,9 @@ For each Prana device, the following entities are created:
 | `sensor.{device_name}_co2_equivalent` | CO2 equivalent | ppm |
 | `sensor.{device_name}_humidity` | Humidity | % |
 | `sensor.{device_name}_atmospheric_pressure` | Atmospheric pressure | hPa |
-| `sensor.{device_name}_inside_t_in` | Inside temperature in | °C |
-| `sensor.{device_name}_inside_t_out` | Inside temperature out | °C |
-| `sensor.{device_name}_outside_t` | Outside temperature | °C |
+| `sensor.{device_name}_inside_temperature_in` | Inside temperature in | °C |
+| `sensor.{device_name}_inside_temperature_out` | Inside temperature out | °C |
+| `sensor.{device_name}_outside_temperature` | Outside temperature | °C |
 
 ### Number Controls
 
