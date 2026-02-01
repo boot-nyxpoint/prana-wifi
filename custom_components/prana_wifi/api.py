@@ -445,25 +445,28 @@ class PranaWifiClient:
     def _parse_state_sensors(self, state: bytes) -> dict[str, Any] | None:
         """Parse the state sensors into a dict."""
         humidity = int(state[51] - 128)
-        if humidity > 0:
-            co2eq = int(struct.unpack_from(">h", state, 52)[0] & 0b0011111111111111)
-            if 0 < co2eq < 10000:
-                inside_t_in = self._parse_state_temperature(state, 45)
-                inside_t_out = self._parse_state_temperature(state, 39)
-                outside_t = self._parse_state_temperature(state, 42)
-            else:
-                inside_t_in = float(state[46]) / 10
-                inside_t_out = float(state[40]) / 10
-                outside_t = None
-            return {
-                "tvoc": int(struct.unpack_from(">h", state, 54)[0] & 0b0011111111111111),
-                "co2eq": co2eq,
-                "humidity": humidity,
-                "atm": 512 + int(state[69]),
-                "inside_t_in": inside_t_in,
-                "inside_t_out": inside_t_out,
-                "outside_t": outside_t,
-            }
+
+        if humidity < 0 or humidity > 100:
+            humidity = None
+
+        co2eq = int(struct.unpack_from(">h", state, 52)[0] & 0b0011111111111111)
+        if 0 < co2eq < 10000:
+            inside_t_in = self._parse_state_temperature(state, 45)
+            inside_t_out = self._parse_state_temperature(state, 39)
+            outside_t = self._parse_state_temperature(state, 42)
+        else:
+            inside_t_in = float(state[46]) / 10
+            inside_t_out = float(state[43]) / 10
+            outside_t = None
+        return {
+            "tvoc": int(struct.unpack_from(">h", state, 54)[0] & 0b0011111111111111),
+            "co2eq": co2eq,
+            "humidity": humidity,
+            "atm": 512 + int(state[69]),
+            "inside_t_in": inside_t_in,
+            "inside_t_out": inside_t_out,
+            "outside_t": outside_t,
+        }
         return None
 
     def _parse_state_temperature(self, state: bytes, offset: int) -> float:
